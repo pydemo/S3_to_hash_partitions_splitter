@@ -47,15 +47,15 @@ def cycle(seq):
         yield seq[i]
         i = (i + 1) % len(seq)
 		
-NR_OF_BUCKETS = 8
+NR_OF_PARTITIONS = 8
 
 cycles={}
 buckets={}
-def get_bid(cid):
+def get_pid(cid):
 	global cycles
 	if cid not in cycles:
 		#print(cid)
-		cycles[cid]=cycle(['B_%d' % x for x in range(NR_OF_BUCKETS)])
+		cycles[cid]=cycle(['B_%d' % x for x in range(NR_OF_PARTITIONS)])
 
 	yield next(cycles[cid])
 
@@ -172,7 +172,7 @@ async def consumer(queue, coro, bid_queue):
 		queue.task_done()
 		if row:
 			cid=row[1]
-			bucket_id=next(get_bid(cid))
+			bucket_id=next(get_pid(cid))
 			if 0:
 				if bucket_id not in buckets:
 					buckets[bucket_id] = {}
